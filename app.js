@@ -1,11 +1,62 @@
-const validator = require('validator')
+const notes = require('./notes.js');
+const chalk = require('chalk');
+const yargs = require('yargs');
 
-const getNotes = require('./notes.js')
+// custmaize yargs
+yargs.version('1.1.0');
 
-const chalk = require('chalk')
+// add, remove, read, list
+yargs.command({
+    command: 'add',
+    describe: 'Add a new note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        },
+        body: {
+            describe: 'Note body',
+            demandOption: true,
+            type: 'string'
 
-console.log(getNotes())
+        }
+    },
+    handler: function (argv) {
+        notes.addNote(argv.title, argv.body);
+    }
+})
 
-console.log(chalk.blue(validator.isURL('https://wp.pl')))
+yargs.command({
+    command: 'remove',
+    describe: 'Remove a note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: function (argv) {
+        notes.removeNote(argv.title)
+    }
+})
 
-console.log(chalk.green('Success !...'))
+yargs.command({
+    command: 'read',
+    describe: 'Reading a note',
+    handler: function () {
+        console.log('Reading a note!');
+    }
+})
+
+yargs.command({
+    command: 'list',
+    describe: 'Listing all notes',
+    handler: function () {
+        console.log('Listing all notes!');
+    }
+})
+yargs.parse();
+
+//console.log(yargs.argv);
